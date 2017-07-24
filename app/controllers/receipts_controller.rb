@@ -1,9 +1,9 @@
-class ReceiptsController < ApplicationController
+class ReceiptsController < ProtectedController
   before_action :set_receipt, only: [:show, :update, :destroy]
 
   # GET /receipts
   def index
-    @receipts = Receipt.all
+    @receipts = current_user.receipts
 
     render json: @receipts
   end
@@ -15,7 +15,7 @@ class ReceiptsController < ApplicationController
 
   # POST /receipts
   def create
-    @receipt = Receipt.new(receipt_params)
+    @receipt = current_user.receipts.build(receipt_params)
 
     if @receipt.save
       render json: @receipt, status: :created, location: @receipt
@@ -41,7 +41,7 @@ class ReceiptsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_receipt
-      @receipt = Receipt.find(params[:id])
+      @receipt = current_user.receipts.find(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
